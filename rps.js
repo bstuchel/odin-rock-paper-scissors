@@ -20,24 +20,31 @@ function makeTitleCase(text) {
     return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 }
 
-function game() {
-    let gamesWon = 0;
-    let gamesLost = 0;
-    for (i = 0; i < 5; i++) {
-        let playerSelection = prompt("Please enter your selection:");
+let gameScore = [0,0,0];
+const selectionButtons = document.querySelectorAll("[data-selection]");
+for (var i = 0; i < selectionButtons.length; i++) {
+    selectionButtons[i].addEventListener("click", function (e) {
+        let playerSelection = e.target.dataset.selection;
         let computerSelection = computerPlay()
         let result = playRound(playerSelection, computerSelection);
+        const resultDiv = document.querySelector(".result");
         if (result === 0) {
-            console.log(`Tie, both players chose ${playerSelection}`);
+            resultDiv.innerHTML = `Tie, both players chose ${playerSelection}`;
+            gameScore[2]++;
         } else if (result === -1) {
-            console.log(`You lose, ${computerSelection} beats ${playerSelection}`);
-            gamesLost++;
+            resultDiv.innerHTML =  `You lose, ${computerSelection} beats ${playerSelection}`;
+            gameScore[1]++;
         } else {
-            console.log(`You win! ${playerSelection} beats ${computerSelection}`)
-            gamesWon++;
+            resultDiv.innerHTML = `You win! ${playerSelection} beats ${computerSelection}`;
+            gameScore[0]++;
         }
-    }
-    console.log(`You won ${gamesWon} game(s) and lost ${gamesLost} game(s)`);
+        resultDiv.innerHTML += `<br> The game score is ${gameScore[0]} wins, ${gameScore[1]} losses and ${gameScore[2]} ties.`;
+        if (gameScore[0] >= 5 && gameScore[0] > gameScore[1]) {
+            resultDiv.innerHTML += `<br> You win!`;
+        } else if (gameScore[1] >= 5) {
+            resultDiv.innerHTML += `<br> You lose`;
+        }
+    });
 }
 
-game();
+
